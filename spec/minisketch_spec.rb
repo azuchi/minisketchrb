@@ -16,4 +16,17 @@ RSpec.describe Minisketch do
       end
     end
   end
+
+  describe "#implementation_supported?" do
+    it do
+      expect(described_class.implementation_supported?(12, 0)).to be true
+      expect(described_class.implementation_supported?(12, 5)).to be false
+    end
+  end
+
+  describe "#implementation_max" do
+    it do
+      expect(described_class.implementation_max > 0).to be true
+    end
+  end
 end

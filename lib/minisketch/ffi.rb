@@ -11,4 +11,6 @@ module MiniscketchFFI
   attach_function :minisketch_bits, [:pointer], :uint32
   attach_function :minisketch_capacity, [:pointer], :size_t
   attach_function :minisketch_implementation, [:pointer], :uint32
+  attach_function :minisketch_implementation_supported, [:uint32, :uint32], :int
+  attach_function :minisketch_implementation_max, [], :uint32
 end
