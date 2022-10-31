@@ -27,6 +27,8 @@ jobs:
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
+        env:
+          ImageOS: ubuntu-22.04
       - name: prettier
         run: bundle exec rbprettier --check '**/*.rb'
       - name: rubocop
