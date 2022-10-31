@@ -10,6 +10,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    container:
+      image: azuchi/libminisketch:0.1
     name: Ruby ${{ matrix.ruby }}
     strategy:
       matrix:
@@ -19,15 +21,15 @@ jobs:
           - '2.7.6'
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Ruby
-      uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: ${{ matrix.ruby }}
-        bundler-cache: true
-    - name: prettier
-      run: bundle exec rbprettier --check '**/*.rb'
-    - name: rubocop
-      run: bundle exec rubocop .
-    - name: Run the default task
-      run: bundle exec rake
+      - uses: actions/checkout@v2
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+      - name: prettier
+        run: bundle exec rbprettier --check '**/*.rb'
+      - name: rubocop
+        run: bundle exec rubocop .
+      - name: Run the default task
+        run: bundle exec rake
