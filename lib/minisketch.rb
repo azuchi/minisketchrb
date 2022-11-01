@@ -78,10 +78,11 @@ class Minisketch
   # Clone a sketch.
   # @return [Minisketch]
   def clone
-    pointer = FFI::AutoPointer.new(
-      minisketch_clone(@pointer),
-      method(:minisketch_destroy)
-    )
+    pointer =
+      FFI::AutoPointer.new(
+        minisketch_clone(@pointer),
+        method(:minisketch_destroy)
+      )
     Minisketch.new(pointer)
   end
 
@@ -98,5 +99,44 @@ class Minisketch
     output = FFI::MemoryPointer.new(:uchar, len)
     minisketch_serialize(@pointer, output)
     output.read_bytes(len)
+  end
+
+  # Deserialize a sketch from bytes.
+  # @param [String] bytes
+  def deserialize(bytes)
+    input = FFI::MemoryPointer.new(:uchar, bytes.bytesize).put_bytes(0, bytes)
+    minisketch_deserialize(@pointer, input)
+    self
+  end
+
+  # Add an element to a sketch.
+  # @param [Integer] element
+  def add(element)
+    minisketch_add_uint64(@pointer, element)
+  end
+
+  # Merge the elements of another sketch into this sketch.
+  # @param [Minisketch] other
+  # @raise [Minisketch::Error] if merge failed.
+  def merge(other)
+    unless other.is_a?(Minisketch)
+      raise Error, "other must be Minisketch object"
+    end
+    capacity = minisketch_merge(@pointer, other.pointer)
+    raise Error, "merge failed" if capacity.zero?
+  end
+
+  # Decode a sketch.
+  # After merging, sketch will contain every element that existed in one but not both of the input sketches.
+  # It can be seen as an exclusive or operation on the set elements.
+  # If the capacity of other_sketch is lower than sketch's,
+  # merging reduces the capacity of sketch to that of other_sketch.
+  # @param [Array(Integer)] elements
+  # @return [Array(Integer, Array(Integer))] Capacity of sketch after merging and decoded elements
+  def decode(max_len)
+    ptr = FFI::MemoryPointer.new(:pointer, max_len)
+    result = minisketch_decode(@pointer, max_len, ptr)
+    raise Error, "sketch decoding failed" if result == -1
+    [result, ptr.read_array_of_type(:uint64, :read_uint64, max_len)]
   end
 end

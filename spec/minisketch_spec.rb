@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe Minisketch do
-  let(:minisketch) do
-    described_class.create(12, 0, 4)
-  end
-
   describe "#initialize" do
     it do
       miniscketch = described_class.create(12, 0, 4)
@@ -36,29 +32,74 @@ RSpec.describe Minisketch do
   describe "#set_seed" do
     it do
       expect do
-        minisketch.set_seed(Random.rand(0xffffffffffffffff))
+        new_sketch.set_seed(Random.rand(0xffffffffffffffff))
       end.not_to raise_error
     end
   end
 
-  describe "#minisketch_clone" do
+  describe "#clone" do
     it do
-      current = minisketch
+      current = new_sketch
       cloned = current.clone
       expect(cloned.pointer.address).not_to eq(0)
       expect(cloned.pointer.address).not_to eq(current.pointer.address)
     end
   end
 
-  describe "#minisketch_serialized_size" do
+  describe "#serialized_size" do
+    it { expect(new_sketch.serialized_size).to eq(6) }
+  end
+
+  describe "#serialize/deserialize" do
     it do
-      expect(minisketch.serialized_size).to eq(6)
+      serialized = new_sketch.serialize
+      expect(serialized.unpack1("H*")).to eq("000000000000")
+      expect(new_sketch.deserialize(serialized)).to be_a(described_class)
     end
   end
 
-  describe "#minisketch_serialize" do
+  describe "#add_uint64" do
     it do
-      expect(minisketch.serialize.unpack1('H*')).to eq('000000000000')
+      sketch = new_sketch
+      serialized = sketch.serialize
+      sketch.add(3000)
+      expect(sketch.serialize).not_to eq(serialized)
     end
+  end
+
+  describe "#decode" do
+    it do
+      sketch = described_class.create(12, 0, 2)
+      sketch.add(42)
+      sketch.add(10)
+      differences = sketch.decode(2)
+      expect(differences.sort).to eq([10, 42])
+    end
+  end
+
+  describe "sanity check" do
+    it do
+      # Alice's side
+      sketch_a = new_sketch
+      (3000..3010).each { |i| sketch_a.add(i) }
+      serialized_size = sketch_a.serialized_size
+      expect(serialized_size).to eq(12 * 4 / 8)
+      serialized = sketch_a.serialize
+      sketch_b = new_sketch
+      (3002..3012).each { |i| sketch_b.add(i) }
+
+      # Bob's side with merge
+      sketch_ba = new_sketch
+      sketch_ba.deserialize(serialized)
+      sketch_b.merge(sketch_ba)
+
+      _, differences = sketch_b.decode(4)
+      expect(differences.length).to eq(4)
+      expect(differences.sort).to eq([3000, 3001, 3011, 3012])
+    end
+  end
+
+  def new_sketch
+    described_class.create(12, 0, 4)
   end
 end
