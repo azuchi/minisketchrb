@@ -20,4 +20,10 @@ module MinisketchFFI
   attach_function :minisketch_add_uint64, %i[pointer uint64], :void
   attach_function :minisketch_merge, %i[pointer pointer], :size_t
   attach_function :minisketch_decode, %i[pointer size_t pointer], :size_t
+  attach_function :minisketch_compute_capacity,
+                  %i[uint32 size_t uint32],
+                  :size_t
+  attach_function :minisketch_compute_max_elements,
+                  %i[uint32 size_t uint32],
+                  :size_t
 end

@@ -71,8 +71,8 @@ RSpec.describe Minisketch do
     it do
       sketch = described_class.create(12, 0, 2)
       sketch.add(42)
-      sketch.add(10)
-      differences = sketch.decode(2)
+      sketch << 10
+      _, differences = sketch.decode(2)
       expect(differences.sort).to eq([10, 42])
     end
   end
@@ -96,6 +96,16 @@ RSpec.describe Minisketch do
       _, differences = sketch_b.decode(4)
       expect(differences.length).to eq(4)
       expect(differences.sort).to eq([3000, 3001, 3011, 3012])
+    end
+  end
+
+  describe "#compute_capacity" do
+    it { expect(described_class.compute_capacity(256, 512, 512)).to eq(512) }
+  end
+
+  describe "#compute_max_elements" do
+    it do
+      expect(described_class.compute_max_elements(256, 512, 512)).to eq(512)
     end
   end
 

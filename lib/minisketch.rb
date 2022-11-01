@@ -51,6 +51,24 @@ class Minisketch
     result == 1
   end
 
+  # Compute the capacity needed to achieve a certain rate of false positives.
+  # @param [Integer] Bits field size.
+  # @param [Integer] max_elements Intended number of elements that can be decoded max_elements
+  # @param [Integer] fpbits A false positive probability of 1 in 2**fpbits.
+  # @return [Integer] capacity
+  def self.compute_capacity(bits, max_elements, fpbits)
+    minisketch_compute_capacity(bits, max_elements, fpbits)
+  end
+
+  # Compute what max_elements can be decoded for a certain rate of false positives.
+  # @param [Integer] bits
+  # @param [Integer] capacity
+  # @param [Integer] fpbits
+  # @return [Integer] max elements
+  def self.compute_max_elements(bits, capacity, fpbits)
+    minisketch_compute_max_elements(bits, capacity, fpbits)
+  end
+
   # Get the element size of a sketch in bits.
   # @return [Integer]
   def bits
@@ -114,6 +132,7 @@ class Minisketch
   def add(element)
     minisketch_add_uint64(@pointer, element)
   end
+  alias << add
 
   # Merge the elements of another sketch into this sketch.
   # @param [Minisketch] other
