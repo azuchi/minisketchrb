@@ -14,18 +14,26 @@ class Minisketch
   class Error < StandardError
   end
 
+  # Constructor
+  # @param [FFI::AutoPointer] pointer minisketch ffi pointer
+  # @raise [Error]
+  def initialize(pointer)
+    @pointer = pointer
+    raise Error, "invalid parameter specified" if @pointer.address.zero?
+  end
+
   # Create minisketch for a given element size, implementation and capacity.
   # @param [Integer] bits
   # @param [Integer] implementation
   # @param [Integer] capacity
   # @raise [Error]
-  def initialize(bits, implementation, capacity)
-    @pointer =
+  def self.create(bits, implementation, capacity)
+    pointer =
       FFI::AutoPointer.new(
         minisketch_create(bits, implementation, capacity),
         method(:minisketch_destroy)
       )
-    raise Error, "invalid parameter specified" if @pointer.address.zero?
+    Minisketch.new(pointer)
   end
 
   # Determine the maximum number of implementations available.
@@ -65,5 +73,15 @@ class Minisketch
   # @param [Integer] seed 64-bit integer
   def set_seed(seed) # rubocop:disable all
     minisketch_set_seed(@pointer, seed)
+  end
+
+  # Clone a sketch.
+  # @return [Minisketch]
+  def clone
+    pointer = FFI::AutoPointer.new(
+      minisketch_clone(@pointer),
+      method(:minisketch_destroy)
+    )
+    Minisketch.new(pointer)
   end
 end

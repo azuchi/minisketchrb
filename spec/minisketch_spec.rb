@@ -3,7 +3,7 @@
 RSpec.describe Minisketch do
   describe "#initialize" do
     it do
-      miniscketch = described_class.new(12, 0, 4)
+      miniscketch = described_class.create(12, 0, 4)
       expect(miniscketch.bits).to eq(12)
       expect(miniscketch.capacity).to eq(4)
       expect(miniscketch.implementation).to eq(0)
@@ -12,7 +12,7 @@ RSpec.describe Minisketch do
 
     context "with invalid implementation" do
       it do
-        expect { described_class.new(12, 5, 4) }.to raise_error(
+        expect { described_class.create(12, 5, 4) }.to raise_error(
           Minisketch::Error
         )
       end
@@ -32,10 +32,19 @@ RSpec.describe Minisketch do
 
   describe "#set_seed" do
     it do
-      minisketch = described_class.new(12, 0, 4)
+      minisketch = described_class.create(12, 0, 4)
       expect do
         minisketch.set_seed(Random.rand(0xffffffffffffffff))
       end.not_to raise_error
+    end
+  end
+
+  describe "#minisketch_clone" do
+    it do
+      minisketch = described_class.create(12, 0, 4)
+      cloned = minisketch.clone
+      expect(cloned.pointer.address).not_to eq(0)
+      expect(cloned.pointer.address).not_to eq(minisketch.pointer.address)
     end
   end
 end
