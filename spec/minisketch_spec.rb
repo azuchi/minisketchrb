@@ -12,7 +12,9 @@ RSpec.describe Minisketch do
 
     context "with invalid implementation" do
       it do
-        expect { described_class.new(12, 5, 4) }.to raise_error(Minisketch::Error)
+        expect { described_class.new(12, 5, 4) }.to raise_error(
+          Minisketch::Error
+        )
       end
     end
   end
@@ -25,8 +27,15 @@ RSpec.describe Minisketch do
   end
 
   describe "#implementation_max" do
+    it { expect(described_class.implementation_max > 0).to be true }
+  end
+
+  describe "#set_seed" do
     it do
-      expect(described_class.implementation_max > 0).to be true
+      minisketch = described_class.new(12, 0, 4)
+      expect {
+        minisketch.set_seed(Random.rand(0xffffffffffffffff))
+      }.to_not raise_error
     end
   end
 end

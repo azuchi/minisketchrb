@@ -60,4 +60,9 @@ class Minisketch
   def implementation
     minisketch_implementation(@pointer)
   end
+
+  # Set the seed for randomizing algorithm choices to a fixed value.
+  # @param [Integer] seed 64-bit integer
+  def set_seed(seed)
+  end
 end
