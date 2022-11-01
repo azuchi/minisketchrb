@@ -84,4 +84,10 @@ class Minisketch
     )
     Minisketch.new(pointer)
   end
+
+  # Compute the size in bytes for serializing a given sketch.
+  # @return [Integer] sketch byte size.
+  def serialized_size
+    minisketch_serialized_size(pointer)
+  end
 end

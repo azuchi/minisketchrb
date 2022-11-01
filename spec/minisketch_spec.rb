@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe Minisketch do
+  let(:minisketch) do
+    described_class.create(12, 0, 4)
+  end
+
   describe "#initialize" do
     it do
       miniscketch = described_class.create(12, 0, 4)
@@ -32,7 +36,6 @@ RSpec.describe Minisketch do
 
   describe "#set_seed" do
     it do
-      minisketch = described_class.create(12, 0, 4)
       expect do
         minisketch.set_seed(Random.rand(0xffffffffffffffff))
       end.not_to raise_error
@@ -41,10 +44,18 @@ RSpec.describe Minisketch do
 
   describe "#minisketch_clone" do
     it do
-      minisketch = described_class.create(12, 0, 4)
-      cloned = minisketch.clone
+      current = minisketch
+      cloned = current.clone
       expect(cloned.pointer.address).not_to eq(0)
-      expect(cloned.pointer.address).not_to eq(minisketch.pointer.address)
+      expect(cloned.pointer.address).not_to eq(current.pointer.address)
     end
   end
+
+  describe "minisketch_serialized_size" do
+    it do
+      expect(minisketch.serialized_size > 0).to be true
+    end
+  end
+
+
 end
