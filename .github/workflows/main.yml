@@ -30,6 +30,6 @@ jobs:
       - name: rubocop
         run: bundle exec rubocop .
       - name: Install libminisketch
-        run: git clone https://github.com/sipa/minisketch.git && cd minisketch && ./autogen.sh && ./configure && make -j"$(($(nproc)+1))" install
+        run: git clone https://github.com/sipa/minisketch.git && cd minisketch && ./autogen.sh && ./configure && sudo make -j"$(($(nproc)+1))" install
       - name: Run the default task
         run: bundle exec rake
