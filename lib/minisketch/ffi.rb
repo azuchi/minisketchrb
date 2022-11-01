@@ -15,4 +15,5 @@ module MiniscketchFFI
   attach_function :minisketch_set_seed, %i[pointer uint64], :void
   attach_function :minisketch_clone, [:pointer], :pointer
   attach_function :minisketch_serialized_size, [:pointer], :size_t
+  attach_function :minisketch_serialize, [:pointer, :pointer], :void
 end

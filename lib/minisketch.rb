@@ -88,6 +88,15 @@ class Minisketch
   # Compute the size in bytes for serializing a given sketch.
   # @return [Integer] sketch byte size.
   def serialized_size
-    minisketch_serialized_size(pointer)
+    minisketch_serialized_size(@pointer)
+  end
+
+  # Serialize a sketch to bytes.
+  # @return [String]
+  def serialize
+    len = serialized_size
+    output = FFI::MemoryPointer.new(:uchar, len)
+    minisketch_serialize(@pointer, output)
+    output.read_bytes(len)
   end
 end

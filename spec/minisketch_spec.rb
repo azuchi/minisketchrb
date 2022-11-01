@@ -11,7 +11,6 @@ RSpec.describe Minisketch do
       expect(miniscketch.bits).to eq(12)
       expect(miniscketch.capacity).to eq(4)
       expect(miniscketch.implementation).to eq(0)
-      puts miniscketch.pointer
     end
 
     context "with invalid implementation" do
@@ -51,11 +50,15 @@ RSpec.describe Minisketch do
     end
   end
 
-  describe "minisketch_serialized_size" do
+  describe "#minisketch_serialized_size" do
     it do
-      expect(minisketch.serialized_size > 0).to be true
+      expect(minisketch.serialized_size).to eq(6)
     end
   end
 
-
+  describe "#minisketch_serialize" do
+    it do
+      expect(minisketch.serialize.unpack1('H*')).to eq('000000000000')
+    end
+  end
 end
