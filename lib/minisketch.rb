@@ -63,6 +63,7 @@ class Minisketch
 
   # Set the seed for randomizing algorithm choices to a fixed value.
   # @param [Integer] seed 64-bit integer
-  def set_seed(seed)
+  def set_seed(seed) # rubocop:disable all
+    minisketch_set_seed(@pointer, seed)
   end
 end

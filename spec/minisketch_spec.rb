@@ -33,9 +33,9 @@ RSpec.describe Minisketch do
   describe "#set_seed" do
     it do
       minisketch = described_class.new(12, 0, 4)
-      expect {
+      expect do
         minisketch.set_seed(Random.rand(0xffffffffffffffff))
-      }.to_not raise_error
+      end.not_to raise_error
     end
   end
 end
