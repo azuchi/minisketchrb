@@ -4,10 +4,10 @@ require_relative "minisketch/version"
 require "ffi"
 require_relative "minisketch/ffi"
 
-# Miniscketch class
+# Minisketch class
 class Minisketch
-  extend MiniscketchFFI
-  include MiniscketchFFI
+  extend MinisketchFFI
+  include MinisketchFFI
 
   attr_reader :pointer
 

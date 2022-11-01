@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module MiniscketchFFI
+module MinisketchFFI
   extend FFI::Library
 
   ffi_lib(ENV["LIBMINISKETCH"] || "libminisketch")

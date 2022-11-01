@@ -3,10 +3,10 @@
 RSpec.describe Minisketch do
   describe "#initialize" do
     it do
-      miniscketch = described_class.create(12, 0, 4)
-      expect(miniscketch.bits).to eq(12)
-      expect(miniscketch.capacity).to eq(4)
-      expect(miniscketch.implementation).to eq(0)
+      minisketch = described_class.create(12, 0, 4)
+      expect(minisketch.bits).to eq(12)
+      expect(minisketch.capacity).to eq(4)
+      expect(minisketch.implementation).to eq(0)
     end
 
     context "with invalid implementation" do
