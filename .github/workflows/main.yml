@@ -10,8 +10,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container:
-      image: azuchi/libminisketch:0.1
     name: Ruby ${{ matrix.ruby }}
     strategy:
       matrix:
@@ -27,11 +25,11 @@ jobs:
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
-        env:
-          ImageOS: ubuntu20
       - name: prettier
         run: bundle exec rbprettier --check '**/*.rb'
       - name: rubocop
         run: bundle exec rubocop .
+      - name: Install libminisketch
+        run: git clone https://github.com/sipa/minisketch.git && cd minisketch && ./autogen.sh && ./configure && make -j"$(($(nproc)+1))" install
       - name: Run the default task
         run: bundle exec rake
