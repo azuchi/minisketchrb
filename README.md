@@ -1,11 +1,17 @@
-# Minisketch
+# Minisketch binding for ruby [![Build Status](https://github.com/azuchi/minisketchrb/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/azuchi/minisketchrb/actions/workflows/main.yml) [![Gem Version](https://badge.fury.io/rb/minisketch.svg)](https://badge.fury.io/rb/minisketch)
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/minisketch`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+This is a wrapper around [libminisketch](https://github.com/sipa/minisketch) for efficient set reconciliation.
 
 ## Installation
 
+### Install libminisketch
+
+Since this library is an FFI wrapper, `libminisketch` must be installed beforehand.
+
+If the library is installed in an unusual location,
+the environment variable [`LIBMINISKETCH`] can be used to specify the path to the library.
+
+### Install gem
 Add this line to your application's Gemfile:
 
 ```ruby
@@ -22,22 +28,31 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Functions exposed in `libminisketch.h` can be accessed using the `Minisketch` class.
 
-## Development
+```ruby
+require 'minisketch'
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+# Create new sketch
+sketch = Minisketch.create(12, 0, 4)
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+# Add element to sketch
+sketch.add(3000)
+# or
+sketch << 3001
 
-## Contributing
+# Serialize
+sketch.serialize
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/minisketch. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/[USERNAME]/minisketch/blob/master/CODE_OF_CONDUCT.md).
+# Decode
+decoded = sketch.decode
 
-## License
+another_sketch = Minisketch.create(12, 0, 4)
+another_sketch << 3000
+another_sketch << 3002
 
-The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+# Merge another sketch
+sketch.merge(another_sketch)
+```
 
-## Code of Conduct
-
-Everyone interacting in the Minisketch project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/minisketch/blob/master/CODE_OF_CONDUCT.md).
+This library has been tested based on commit [a571ba2](https://github.com/sipa/minisketch/commit/a571ba20f9dd1accab6a2309d066369878042ca6) of libminisketch.
