@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# FFIs for libminisketch
 module MinisketchFFI
   extend FFI::Library
 
