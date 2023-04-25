@@ -150,7 +150,7 @@ class Minisketch
   # It can be seen as an exclusive or operation on the set elements.
   # If the capacity of other_sketch is lower than sketch's,
   # merging reduces the capacity of sketch to that of other_sketch.
-  # @param [Array(Integer)] elements
+  # @param [Integer] max_len Maximum number of elements to decode.
   # @return [Array(Integer, Array(Integer))] Capacity of sketch after merging and decoded elements
   def decode(max_len)
     ptr = FFI::MemoryPointer.new(:pointer, max_len)
